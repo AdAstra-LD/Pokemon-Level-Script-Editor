@@ -3,7 +3,6 @@ package main;
 import binaryutils.*;
 import binaryutils.trifindo.BinaryReader;
 import binaryutils.trifindo.BinaryWriter;
-import guianimation.ShakeAnimation;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ObservableBooleanValue;
@@ -24,13 +23,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Observable;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.TreeSet;
+import java.util.prefs.Preferences;
 
 
 public class Controller implements Initializable {
+    public static Preferences prefs = Preferences.userNodeForPackage(Controller.class);
     private ObservableSet<LSTrigger> lsobsSet;
     private String filePath;
 
@@ -43,16 +43,16 @@ public class Controller implements Initializable {
     }
 
     public void saveToFile () {
-        try {
-            BinaryWriter bw = new BinaryWriter(filePath);
-            TreeSet<LSTrigger> tsMapScreenLoad = new TreeSet<>();
+        try (BinaryWriter bw = new BinaryWriter(filePath)){
+
+            TreeSet<MapScreenLoadTrigger> tsMapScreenLoad = new TreeSet<>();
             TreeSet<VariableValueTrigger> tsVariable = new TreeSet<>();
 
             for (LSTrigger lst : lsobsSet) {
                 if (lst.getType() == LSTrigger.VARIABLEVALUE) {
                     tsVariable.add((VariableValueTrigger) lst);
                 } else {
-                    tsMapScreenLoad.add(lst);
+                    tsMapScreenLoad.add((MapScreenLoadTrigger) lst);
                 }
             }
 
@@ -81,12 +81,12 @@ public class Controller implements Initializable {
                     }
                 }
             }
-
-            bw.close();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            LSTrigger.customAlert("The file couldn't be located.");
+            return;
         } catch (IOException e) {
-            e.printStackTrace();
+            LSTrigger.customAlert("Error writing file.");
+            return;
         }
 
         Alert a = new Alert(Alert.AlertType.INFORMATION, "File successfully saved.");
@@ -108,12 +108,10 @@ public class Controller implements Initializable {
             }
         } catch (FileNotFoundException e) {
             LSTrigger.customAlert("The file couldn't be located.");
-            return;
         } catch (EOFException eof) {
             System.out.println("End of File reached");
         } catch (IOException e) {
             LSTrigger.customAlert("Error reading file.");
-            return;
         }
     }
 
@@ -174,7 +172,7 @@ public class Controller implements Initializable {
     void newLS(ActionEvent event) {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to start over?");
         Optional<ButtonType> bt = confirm.showAndWait();
-            if (bt.get() == ButtonType.OK) {
+            if (bt.isPresent() && bt.get() == ButtonType.OK) {
                 lsobsSet.clear();
                 filePath = "";
                 variableRBTN.setSelected(true);
@@ -183,8 +181,6 @@ public class Controller implements Initializable {
                 idFLD.clear();
                 valueFLD.clear();
                 varFLD.clear();
-            } else {
-                return;
             }
     }
 
@@ -193,6 +189,10 @@ public class Controller implements Initializable {
         Stage s = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open File");
+
+        String prefPath = prefs.get("LastPath", null);
+        if (prefPath != null)
+            fileChooser.setInitialDirectory(new File(prefPath).getParentFile());
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Level Script files (*.scr)", "*.scr"),
                 new FileChooser.ExtensionFilter("Binary files (*.bin)", "*.bin")
@@ -201,9 +201,9 @@ public class Controller implements Initializable {
 
         if (selectedFile == null) {
             System.out.println("Open file cancelled");
-            return;
         } else {
             filePath = selectedFile.getAbsolutePath();
+            prefs.put("LastPath", filePath);
             parseFile();
         }
     }
@@ -213,6 +213,10 @@ public class Controller implements Initializable {
         Stage s = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save to File");
+
+        String prefPath = prefs.get("LastPath", null);
+        if (prefPath != null)
+            fileChooser.setInitialDirectory(new File(prefPath).getParentFile());
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Level Script files (*.scr)", "*.scr"),
                 new FileChooser.ExtensionFilter("Binary files (*.bin)", "*.bin")
@@ -221,16 +225,16 @@ public class Controller implements Initializable {
 
         if (selectedFile == null) {
             System.out.println("Save file cancelled");
-            return;
         } else {
             filePath = selectedFile.getAbsolutePath();
+            prefs.put("LastPath", filePath);
             saveToFile();
         }
     }
 
     @FXML
     void saveLS(ActionEvent event) {
-        if (filePath == null || filePath == "") {
+        if (filePath == null || filePath.equals("")) {
             saveAsLS(event);
         } else {
             saveToFile();
@@ -265,7 +269,7 @@ public class Controller implements Initializable {
             }
         }
 
-        if (error != "") {
+        if (!error.equals("")) {
             LSTrigger.customAlert("Only integers in the range 0-65535 are allowed.\nInvalid field(s):" + error);
             return;
         }
@@ -310,30 +314,14 @@ public class Controller implements Initializable {
             }
         });
 
-        newBTN.setOnMouseEntered(event -> {
-            newBTN.setStyle(null);
-        });
-        newBTN.setOnMouseExited(event -> {
-            newBTN.setStyle("-fx-background-color: transparent");
-        });
 
-        openBTN.setOnMouseEntered(event -> {
-            openBTN.setStyle(null);
-        });
-        openBTN.setOnMouseExited(event -> {
-            openBTN.setStyle("-fx-background-color: transparent");
-        });
-
-        saveBTN.setOnMouseEntered(event -> {
-            saveBTN.setStyle(null);
-        });
-        saveBTN.setOnMouseExited(event -> {
-            saveBTN.setStyle("-fx-background-color: transparent");
-        });
-
-
-        ObservableList olist = FXCollections.observableArrayList(lsobsSet);
+        ObservableList<LSTrigger> olist = FXCollections.observableArrayList(lsobsSet);
         list.setItems(olist);
+
+
+        setDefaultButtonStyle(newBTN);
+        setDefaultButtonStyle(openBTN);
+        setDefaultButtonStyle(saveBTN);
 
         varFLD.visibleProperty().bind(variableRBTN.selectedProperty());
         varTXT.visibleProperty().bind(variableRBTN.selectedProperty());
@@ -341,17 +329,25 @@ public class Controller implements Initializable {
         valueFLD.visibleProperty().bind(variableRBTN.selectedProperty());
         valueTXT.visibleProperty().bind(variableRBTN.selectedProperty());
 
+
         ObservableBooleanValue a = variableRBTN.selectedProperty();
         ObservableBooleanValue b = idFLD.textProperty().isEmpty();
-        ObservableBooleanValue c = Bindings.not(varFLD.textProperty().isEmpty());
-        ObservableBooleanValue d = Bindings.not(valueFLD.textProperty().isEmpty());
+        ObservableBooleanValue c = varFLD.textProperty().isEmpty();
+        ObservableBooleanValue d = valueFLD.textProperty().isEmpty();
+        ObservableBooleanValue cORd = Bindings.or(c,d);
 
-        ObservableBooleanValue abcd = Bindings.and(a,Bindings.not(b)).and(c).and(d);
-        ObservableBooleanValue aOrB = Bindings.or(a,b);
+        //Add button disabled when:
+        // - Script ID is empty
+        // - but also when VariableScript is selected and any other text field is empty
+        addBTN.disableProperty().bind(Bindings.and(a,cORd).or(b));
 
-        SimpleListProperty<LSTrigger> slpTrigger = new SimpleListProperty<LSTrigger>(olist);
+        // Remove button disabled when:
+        // - List is empty
+        removeBTN.disableProperty().bind(new SimpleListProperty<>(olist).emptyProperty());
+    }
 
-        addBTN.disableProperty().bind(Bindings.and(Bindings.not(abcd), aOrB));
-        removeBTN.disableProperty().bind(slpTrigger.emptyProperty());
+    private void setDefaultButtonStyle(Button btn) {
+        btn.setOnMouseEntered(event -> btn.setStyle(null));
+        btn.setOnMouseExited(event -> btn.setStyle("-fx-background-color: transparent"));
     }
 }

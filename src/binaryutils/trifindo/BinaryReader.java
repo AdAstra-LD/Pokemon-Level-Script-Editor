@@ -11,7 +11,7 @@ import java.nio.ByteOrder;
 /**
  * @author Trifindo
  */
-public class BinaryReader {
+public class BinaryReader implements AutoCloseable {
 
     private FileInputStream fis;
 

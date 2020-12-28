@@ -10,9 +10,9 @@ import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 
 /**
- * @author Trifindo
+ * @author Trifindo, AdAstra/LD3005
  */
-public class BinaryWriter {
+public class BinaryWriter implements AutoCloseable {
 
     private FileOutputStream fos;
     private int bytesWritten = 0;
