@@ -14,6 +14,7 @@ import java.nio.ByteOrder;
 public class BinaryReader implements AutoCloseable {
 
     private FileInputStream fis;
+    private long bytesRead = 0;
 
     public BinaryReader(String path) throws FileNotFoundException {
         fis = new FileInputStream(new File(path));
@@ -27,25 +28,33 @@ public class BinaryReader implements AutoCloseable {
         fis.close();
     }
 
+    public long getBytesRead() {
+        return bytesRead;
+    }
+
     public String readString(int size) throws IOException {
         byte[] data = new byte[size];
         fis.read(data);
+        bytesRead += size;
         return new String(data);
     }
 
     public int readUInt8() throws IOException {
+        bytesRead += 1;
         return fis.read() & 0xFF;
     }
 
     public int readUInt16() throws IOException {
         byte[] data = new byte[2];
         fis.read(data);
+        bytesRead += 2;
         return ((data[1] & 0xff) << 8) | (data[0] & 0xff);
     }
 
     public long readUInt32() throws IOException {
         byte[] data = new byte[4];
         fis.read(data);
+        bytesRead += 4;
         return ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt() & 0xFFFFFFFF;
     }
 
@@ -55,6 +64,7 @@ public class BinaryReader implements AutoCloseable {
         if (result == -1) {
             throw new IOException();
         }
+        bytesRead += size;
         return data;
     }
 

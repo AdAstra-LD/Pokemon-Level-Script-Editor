@@ -96,15 +96,29 @@ public class Controller implements Initializable {
     private void parseFile() {
         try {
             BinaryReader br = new BinaryReader(filePath);
-            int scriptType = 100;
-            while (scriptType > 0) {
-                scriptType = br.readUInt8();
+            int scriptType, conditionalStructureOffset = -1;
+            while ((scriptType = br.readUInt8()) > 0) {
+                conditionalStructureOffset--;
                 long scriptToTrigger;
 
-                if (scriptType > 0 && scriptType != LSTrigger.VARIABLEVALUE) {
+                if (scriptType != LSTrigger.VARIABLEVALUE) {
                     scriptToTrigger = br.readUInt32();
+                    conditionalStructureOffset -= 4;
                     lsobsSet.add(new MapScreenLoadTrigger(scriptType, (int) scriptToTrigger));
+                } else {
+                    conditionalStructureOffset = (int) br.readUInt32();
                 }
+            }
+
+            if (conditionalStructureOffset > 1) {
+                LSTrigger.customAlert("This file is malformed.");
+                return;
+            }
+            int variableID, varExpectedValue, scriptToTrigger;
+            while ((variableID = br.readUInt16()) > 0) {
+                varExpectedValue = br.readUInt16();
+                scriptToTrigger = br.readUInt16();
+                lsobsSet.add(new VariableValueTrigger(scriptToTrigger, variableID, varExpectedValue));
             }
         } catch (FileNotFoundException e) {
             LSTrigger.customAlert("The file couldn't be located.");
@@ -194,8 +208,8 @@ public class Controller implements Initializable {
         if (prefPath != null)
             fileChooser.setInitialDirectory(new File(prefPath).getParentFile());
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Level Script files (*.scr)", "*.scr"),
-                new FileChooser.ExtensionFilter("Binary files (*.bin)", "*.bin")
+                new FileChooser.ExtensionFilter("Level Script files (*.scr, *.bin)", "*.scr", "*.bin")
+                //new FileChooser.ExtensionFilter("Binary files (*.bin)", "*.bin")
         );
         File selectedFile = fileChooser.showOpenDialog(s);
 
@@ -218,8 +232,8 @@ public class Controller implements Initializable {
         if (prefPath != null)
             fileChooser.setInitialDirectory(new File(prefPath).getParentFile());
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Level Script files (*.scr)", "*.scr"),
-                new FileChooser.ExtensionFilter("Binary files (*.bin)", "*.bin")
+                new FileChooser.ExtensionFilter("Level Script files (*.scr, *.bin)", "*.scr", "*.bin")
+                //new FileChooser.ExtensionFilter("Binary files (*.bin)", "*.bin")
         );
         File selectedFile = fileChooser.showSaveDialog(s);
 
