@@ -170,7 +170,7 @@
                               <Insets right="5.0" />
                            </HBox.margin>
                         </VBox>
-                        <VBox minWidth="-Infinity" prefHeight="287.0" prefWidth="172.0" spacing="5.0" HBox.hgrow="NEVER">
+                        <VBox minWidth="-Infinity" prefHeight="255.0" prefWidth="200.0" spacing="5.0" HBox.hgrow="NEVER">
                            <children>
                               <Label text="Config">
                                  <font>
