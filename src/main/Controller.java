@@ -4,12 +4,9 @@ import binaryutils.*;
 import binaryutils.trifindo.BinaryReader;
 import binaryutils.trifindo.BinaryWriter;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableBooleanValue;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
@@ -30,7 +27,6 @@ import javafx.stage.Stage;
 import levelscript.*;
 import levelscript.InvalidFieldsException;
 
-import java.awt.*;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -80,7 +76,7 @@ public class Controller implements Initializable {
 
     public int getSelectedButtonID (ToggleGroup btns) {
         int scriptType = 0;
-        while (!levelscriptTypeGroup.getToggles().get(scriptType).isSelected()) {
+        while (!btns.getToggles().get(scriptType).isSelected()) {
             scriptType++;
         }
         return scriptType+1;
