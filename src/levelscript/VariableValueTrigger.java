@@ -6,8 +6,8 @@ public class VariableValueTrigger extends LSTrigger implements Comparable<Variab
     private int variableToWatch;
     private int expectedValue;
 
-    public VariableValueTrigger(int ID, int variableToWatch, int expectedValue) {
-        super(VARIABLEVALUE, ID);
+    public VariableValueTrigger(int scriptIDtoTrigger, int variableToWatch, int expectedValue) {
+        super(VARIABLEVALUE, scriptIDtoTrigger);
         this.variableToWatch = variableToWatch;
         this.expectedValue = expectedValue;
     }
@@ -38,7 +38,7 @@ public class VariableValueTrigger extends LSTrigger implements Comparable<Variab
         if (this == o) return true;
         if (!(o instanceof VariableValueTrigger)) return false;
         VariableValueTrigger that = (VariableValueTrigger) o;
-        return this.getType() == that.getType()
+        return this.getTriggerType() == that.getTriggerType()
                 && this.getScriptTriggered() == that.getScriptTriggered()
                 && this.variableToWatch == that.variableToWatch
                 && this.expectedValue == that.expectedValue;
@@ -46,14 +46,14 @@ public class VariableValueTrigger extends LSTrigger implements Comparable<Variab
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.getType(), this.getScriptTriggered(), variableToWatch, expectedValue);
+        return Objects.hash(this.getTriggerType(), this.getScriptTriggered(), variableToWatch, expectedValue);
     }
 
     @Override
     public int compareTo(VariableValueTrigger other) {
         int i;
 
-        i = -Integer.compare(this.getType(), other.getType());
+        i = -Integer.compare(this.getTriggerType(), other.getTriggerType());
         if (i != 0) return i;
 
         i = Integer.compare(this.getScriptTriggered(), other.getScriptTriggered());

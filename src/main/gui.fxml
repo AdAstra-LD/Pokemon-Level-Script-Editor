@@ -5,6 +5,7 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
@@ -16,6 +17,7 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -29,22 +31,42 @@
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                        <MenuItem mnemonicParsing="false" onAction="#newLS" text="New" />
-                    <MenuItem mnemonicParsing="false" onAction="#openLS" text="Open" />
-                        <MenuItem mnemonicParsing="false" onAction="#saveLS" text="Save" />
-                        <MenuItem mnemonicParsing="false" onAction="#saveAsLS" text="Save as..." />
+                        <MenuItem onAction="#newLS" text="New">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                    <MenuItem onAction="#openLS" text="Open">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem fx:id="saveMENUOPT" onAction="#saveLS" text="Save">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem fx:id="saveasMENUOPT" onAction="#saveAsLS" text="Save as...">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem onAction="#quit" text="Quit">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
+                    <MenuItem onAction="#about" text="About">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="B" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
                   </items>
                 </Menu>
               </menus>
             </MenuBar>
             <HBox alignment="CENTER_LEFT" prefHeight="7.0" prefWidth="552.0" VBox.vgrow="NEVER">
                <children>
-                  <Button fx:id="newBTN" focusTraversable="false" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#newLS" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
+                  <Button focusTraversable="false" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#newLS" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
                      <graphic>
                         <ImageView pickOnBounds="true" preserveRatio="true">
                            <viewport>
@@ -59,7 +81,7 @@
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
                   </Button>
-                  <Button fx:id="openBTN" focusTraversable="false" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#openLS" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
+                  <Button focusTraversable="false" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#openLS" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
                      <graphic>
                         <ImageView pickOnBounds="true" preserveRatio="true">
                            <viewport>
@@ -126,92 +148,123 @@
                <children>
                   <Separator prefHeight="0.0" prefWidth="0.0" VBox.vgrow="NEVER">
                      <VBox.margin>
-                        <Insets top="5.0" />
+                        <Insets bottom="5.0" top="5.0" />
                      </VBox.margin>
                   </Separator>
-                  <VBox maxHeight="1.7976931348623157E308" prefHeight="408.0" prefWidth="628.0" VBox.vgrow="ALWAYS">
-                     <VBox.margin>
-                        <Insets top="5.0" />
-                     </VBox.margin>
+                  <HBox prefHeight="647.0" prefWidth="527.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <HBox prefHeight="647.0" prefWidth="527.0" VBox.vgrow="ALWAYS">
+                        <VBox maxHeight="1.7976931348623157E308" prefHeight="157.0" prefWidth="387.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <VBox maxHeight="1.7976931348623157E308" prefHeight="157.0" prefWidth="387.0" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <ListView fx:id="list" maxHeight="1.7976931348623157E308" prefHeight="648.0" prefWidth="387.0" VBox.vgrow="ALWAYS" />
-                                 </children>
-                                 <HBox.margin>
-                                    <Insets right="5.0" />
-                                 </HBox.margin>
-                              </VBox>
-                              <VBox minWidth="-Infinity" prefHeight="287.0" prefWidth="172.0" spacing="5.0" HBox.hgrow="NEVER">
-                                 <children>
-                                    <Label text="Config">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Label>
-                                    <Separator prefWidth="200.0" />
-                                    <Label text="Script ID to trigger" />
-                                    <TextField fx:id="idFLD">
-                                       <VBox.margin>
-                                          <Insets bottom="5.0" />
-                                       </VBox.margin>
-                                    </TextField>
-                                    <Label fx:id="varTXT" text="Variable to Watch" />
-                                    <TextField fx:id="varFLD">
-                                       <VBox.margin>
-                                          <Insets bottom="5.0" />
-                                       </VBox.margin>
-                                    </TextField>
-                                    <Label fx:id="valueTXT" text="Expected Value" />
-                                    <TextField fx:id="valueFLD" />
-                                    <Separator maxHeight="1.7976931348623157E308" orientation="VERTICAL" prefHeight="200.0" visible="false" VBox.vgrow="ALWAYS" />
-                                    <HBox alignment="CENTER">
-                                       <VBox.margin>
-                                          <Insets bottom="3.0" />
-                                       </VBox.margin>
-                                       <children>
-                                          <CheckBox fx:id="paddingCHK" focusTraversable="false" mnemonicParsing="false" selected="true" text="Word-alignment Padding" />
-                                       </children>
-                                    </HBox>
-                                    <HBox alignment="CENTER" spacing="10.0">
-                                       <children>
-                                          <Button fx:id="addBTN" alignment="CENTER" mnemonicParsing="false" onAction="#add" prefHeight="25.0" prefWidth="67.0" text="Add" textAlignment="CENTER">
-                                             <graphic>
-                                                <ImageView pickOnBounds="true" preserveRatio="true">
-                                                   <viewport>
-                                                      <Rectangle2D height="16.0" width="16.0" />
-                                                   </viewport>
-                                                   <image>
-                                                      <Image url="@../resources/add.png" />
-                                                   </image>
-                                                </ImageView>
-                                             </graphic>
-                                          </Button>
-                                          <Button fx:id="removeBTN" alignment="CENTER" mnemonicParsing="false" onAction="#remove" prefHeight="25.0" prefWidth="92.0" text="Remove" textAlignment="CENTER">
-                                             <graphic>
-                                                <ImageView pickOnBounds="true" preserveRatio="true">
-                                                   <viewport>
-                                                      <Rectangle2D height="16.0" width="16.0" />
-                                                   </viewport>
-                                                   <image>
-                                                      <Image url="@../resources/remove.png" />
-                                                   </image>
-                                                </ImageView>
-                                             </graphic>
-                                          </Button>
-                                       </children>
-                                    </HBox>
-                                 </children>
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                              </VBox>
+                              <ListView fx:id="list" focusTraversable="false" maxHeight="1.7976931348623157E308" mouseTransparent="true" prefHeight="648.0" prefWidth="387.0" VBox.vgrow="ALWAYS">
+                                 <contextMenu>
+                                    <ContextMenu>
+                                      <items>
+                                        <MenuItem fx:id="editMNU" mnemonicParsing="false" onAction="#startEditing" text="Edit selected trigger" />
+                                          <MenuItem fx:id="removeMNU" mnemonicParsing="false" onAction="#remove" text="Remove selected trigger" />
+                                      </items>
+                                    </ContextMenu>
+                                 </contextMenu>
+                              </ListView>
                            </children>
-                        </HBox>
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <VBox minWidth="-Infinity" prefHeight="287.0" prefWidth="172.0" spacing="5.0" HBox.hgrow="NEVER">
+                           <children>
+                              <Label text="Config">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                              <Separator prefWidth="200.0" />
+                              <Label text="Script ID to trigger" />
+                              <TextField fx:id="idFLD">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <Label fx:id="varTXT" text="Variable to Watch" />
+                              <TextField fx:id="varFLD">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <Label fx:id="valueTXT" text="Expected Value" />
+                              <TextField fx:id="valueFLD" />
+                              <Separator maxHeight="1.7976931348623157E308" orientation="VERTICAL" prefHeight="292.0" prefWidth="0.0" visible="false" VBox.vgrow="ALWAYS" />
+                              <HBox fx:id="editModeBOX" alignment="CENTER" spacing="10.0" visible="false">
+                                 <children>
+                                    <Button alignment="CENTER" mnemonicParsing="false" onAction="#confirm" prefHeight="25.0" prefWidth="100.0" text="Confirm" textAlignment="CENTER">
+                                       <graphic>
+                                          <ImageView pickOnBounds="true" preserveRatio="true">
+                                             <viewport>
+                                                <Rectangle2D height="16.0" width="16.0" />
+                                             </viewport>
+                                             <image>
+                                                <Image url="@../resources/confirm.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                    <Button alignment="CENTER" mnemonicParsing="false" onAction="#discard" prefHeight="25.0" prefWidth="92.0" text="Discard" textAlignment="CENTER">
+                                       <graphic>
+                                          <ImageView pickOnBounds="true" preserveRatio="true">
+                                             <viewport>
+                                                <Rectangle2D height="16.0" width="16.0" />
+                                             </viewport>
+                                             <image>
+                                                <Image url="@../resources/discard.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <Separator maxHeight="1.7976931348623157E308" orientation="VERTICAL" prefHeight="200.0" visible="false" />
+                              <HBox alignment="CENTER">
+                                 <VBox.margin>
+                                    <Insets bottom="3.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <CheckBox fx:id="paddingCHK" focusTraversable="false" mnemonicParsing="false" selected="true" text="Word-alignment Padding" />
+                                 </children>
+                              </HBox>
+                              <HBox fx:id="normalbtnsBOX" alignment="CENTER" spacing="10.0">
+                                 <children>
+                                    <Button fx:id="addBTN" alignment="CENTER" mnemonicParsing="false" onAction="#add" prefHeight="25.0" prefWidth="67.0" text="Add" textAlignment="CENTER">
+                                       <graphic>
+                                          <ImageView pickOnBounds="true" preserveRatio="true">
+                                             <viewport>
+                                                <Rectangle2D height="16.0" width="16.0" />
+                                             </viewport>
+                                             <image>
+                                                <Image url="@../resources/add.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                    <Button fx:id="removeBTN" alignment="CENTER" mnemonicParsing="false" onAction="#remove" prefHeight="25.0" prefWidth="92.0" text="Remove" textAlignment="CENTER">
+                                       <graphic>
+                                          <ImageView pickOnBounds="true" preserveRatio="true">
+                                             <viewport>
+                                                <Rectangle2D height="16.0" width="16.0" />
+                                             </viewport>
+                                             <image>
+                                                <Image url="@../resources/remove.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                           </children>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </VBox>
                      </children>
-                  </VBox>
+                  </HBox>
                </children>
                <VBox.margin>
                   <Insets bottom="7.0" left="8.0" right="8.0" />

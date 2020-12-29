@@ -11,25 +11,28 @@ public abstract class LSTrigger {
     public static final int SCREENRESET = 3;
     public static final int LOADGAME = 4;
 
-    private int type;
+    public static final int SMALLEST_TRIGGER_SIZE = 5;
+
+    private int triggerType;
     private int scriptTriggered;
 
-    public LSTrigger(int type, int scriptTriggered) {
-        this.type = type;
+    public LSTrigger(int triggerType, int scriptTriggered) {
+        this.triggerType = triggerType;
         this.scriptTriggered = scriptTriggered;
     }
 
-    public static final void customAlert(String contentText) {
+    public static void customAlert(String contentText) {
         Alert a = new Alert(Alert.AlertType.ERROR, contentText, ButtonType.OK);
+        a.setHeaderText("Something went wrong");
         a.show();
     }
 
-    public int getType() {
-        return type;
+    public int getTriggerType() {
+        return triggerType;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setTriggerType(int triggerType) {
+        this.triggerType = triggerType;
     }
 
     public int getScriptTriggered() {
@@ -45,12 +48,12 @@ public abstract class LSTrigger {
         if (this == o) return true;
         if (!(o instanceof LSTrigger)) return false;
         LSTrigger lst = (LSTrigger) o;
-        return this.type == lst.getType() && this.scriptTriggered == lst.getScriptTriggered();
+        return this.triggerType == lst.getTriggerType() && this.scriptTriggered == lst.getScriptTriggered();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, scriptTriggered);
+        return Objects.hash(triggerType, scriptTriggered);
     }
 
     @Override

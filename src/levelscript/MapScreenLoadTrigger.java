@@ -10,14 +10,14 @@ public class MapScreenLoadTrigger extends LSTrigger implements Comparable<MapScr
     @Override
     public String toString() {
         String message = super.toString();
-        switch (getType()) {
+        switch (getTriggerType()) {
             case LSTrigger.MAPCHANGE:
                 message += " upon entering the LS map.";
                 break;
             case LSTrigger.SCREENRESET:
                 message += " when a fadescreen happens in the LS map.";
                 break;
-            case LSTrigger.LOADGAME:G:
+            case LSTrigger.LOADGAME:
                 message += " when the game resumes in the LS map.";
                 break;
         }
@@ -28,7 +28,7 @@ public class MapScreenLoadTrigger extends LSTrigger implements Comparable<MapScr
     public int compareTo(MapScreenLoadTrigger other) {
         int i;
 
-        i = -Integer.compare(this.getType(), other.getType());
+        i = -Integer.compare(this.getTriggerType(), other.getTriggerType());
         if (i != 0) return i;
 
         i = Integer.compare(this.getScriptTriggered(), other.getScriptTriggered());

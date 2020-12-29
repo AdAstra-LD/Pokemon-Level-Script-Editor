@@ -3,9 +3,13 @@ package main;
 import binaryutils.*;
 import binaryutils.trifindo.BinaryReader;
 import binaryutils.trifindo.BinaryWriter;
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
@@ -14,25 +18,65 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import levelscript.*;
+import levelscript.InvalidFieldsException;
 
+import java.awt.*;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.prefs.Preferences;
 
 
 public class Controller implements Initializable {
     public static Preferences prefs = Preferences.userNodeForPackage(Controller.class);
+    private Stage stage;
+    private String defaultTitle;
+
+    private File currentFile;
+    private LSTrigger selected = null;
+    private BooleanProperty editMode = new SimpleBooleanProperty();
+    private DoubleProperty opacity = new SimpleDoubleProperty();
+
+    ObservableList<LSTrigger> olist;
     private ObservableSet<LSTrigger> lsobsSet;
-    private String filePath;
+
+
+    public void setStage(Stage s) {
+        this.stage = s;
+        defaultTitle = s.getTitle();
+    }
+
+    private void startOver() {
+        editMode.set(false);
+        opacity.set(1.0);
+
+        lsobsSet.clear();
+        variableRBTN.setSelected(true);
+        paddingCHK.setSelected(true);
+
+        idFLD.clear();
+        valueFLD.clear();
+        varFLD.clear();
+    }
+
+    private void clearInputFields() {
+        idFLD.clear();
+        valueFLD.clear();
+        varFLD.clear();
+    }
 
     public int getSelectedButtonID (ToggleGroup btns) {
         int scriptType = 0;
@@ -42,14 +86,14 @@ public class Controller implements Initializable {
         return scriptType+1;
     }
 
-    public void saveToFile () {
-        try (BinaryWriter bw = new BinaryWriter(filePath)){
+    public void saveToFile (File toWrite) {
+        try (BinaryWriter bw = new BinaryWriter(toWrite)){
 
             TreeSet<MapScreenLoadTrigger> tsMapScreenLoad = new TreeSet<>();
             TreeSet<VariableValueTrigger> tsVariable = new TreeSet<>();
 
             for (LSTrigger lst : lsobsSet) {
-                if (lst.getType() == LSTrigger.VARIABLEVALUE) {
+                if (lst.getTriggerType() == LSTrigger.VARIABLEVALUE) {
                     tsVariable.add((VariableValueTrigger) lst);
                 } else {
                     tsMapScreenLoad.add((MapScreenLoadTrigger) lst);
@@ -57,7 +101,7 @@ public class Controller implements Initializable {
             }
 
             for (LSTrigger lstm : tsMapScreenLoad) {
-                bw.writeUInt8(lstm.getType());
+                bw.writeUInt8(lstm.getTriggerType());
                 bw.writeUInt32(lstm.getScriptTriggered());
             }
 
@@ -89,36 +133,54 @@ public class Controller implements Initializable {
             return;
         }
 
-        Alert a = new Alert(Alert.AlertType.INFORMATION, "File successfully saved.");
+        Alert a = new Alert(Alert.AlertType.INFORMATION, "File was correctly saved.");
+        a.setHeaderText("Success!");
         a.show();
+        stage.setTitle(toWrite.getName() + " - " + defaultTitle);
     }
 
-    private void parseFile() {
+    private void parseFile(File toparse) {
+        Set<LSTrigger> bufferSet = new HashSet<>();
+
         try {
-            BinaryReader br = new BinaryReader(filePath);
-            int scriptType, conditionalStructureOffset = -1;
-            while ((scriptType = br.readUInt8()) > 0) {
-                conditionalStructureOffset--;
+            BinaryReader br = new BinaryReader(toparse);
+
+            int scriptType;
+            boolean hasConditionalStructure = false;
+            int conditionalStructureOffset = -1;
+
+            while ((scriptType = br.readUInt8()) >= LSTrigger.VARIABLEVALUE
+                    && scriptType <= LSTrigger.LOADGAME) {
                 long scriptToTrigger;
 
+                if (hasConditionalStructure) conditionalStructureOffset--;
                 if (scriptType != LSTrigger.VARIABLEVALUE) {
                     scriptToTrigger = br.readUInt32();
-                    conditionalStructureOffset -= 4;
-                    lsobsSet.add(new MapScreenLoadTrigger(scriptType, (int) scriptToTrigger));
+                    if (hasConditionalStructure) conditionalStructureOffset -= 4;
+                    bufferSet.add(new MapScreenLoadTrigger(scriptType, (int) scriptToTrigger));
                 } else {
+                    hasConditionalStructure = true;
                     conditionalStructureOffset = (int) br.readUInt32();
                 }
             }
 
-            if (conditionalStructureOffset > 1) {
-                LSTrigger.customAlert("This file is malformed.");
+            if (br.getBytesRead() < LSTrigger.SMALLEST_TRIGGER_SIZE) {
+                LSTrigger.customAlert("Parser failure: The input file you attempted to load is either malformed or not a Level Script file. ");
                 return;
             }
-            int variableID, varExpectedValue, scriptToTrigger;
-            while ((variableID = br.readUInt16()) > 0) {
-                varExpectedValue = br.readUInt16();
-                scriptToTrigger = br.readUInt16();
-                lsobsSet.add(new VariableValueTrigger(scriptToTrigger, variableID, varExpectedValue));
+
+            if (hasConditionalStructure) {
+                if (conditionalStructureOffset != 1) {
+                    LSTrigger.customAlert("Field error: The Level Script file you attempted to load is broken. " + conditionalStructureOffset);
+                    return;
+                } else {
+                    int variableID;
+                    while ((variableID = br.readUInt16()) > 0) {
+                        int varExpectedValue = br.readUInt16();
+                        int scriptToTrigger = br.readUInt16();
+                        bufferSet.add(new VariableValueTrigger(scriptToTrigger, variableID, varExpectedValue));
+                    }
+                }
             }
         } catch (FileNotFoundException e) {
             LSTrigger.customAlert("The file couldn't be located.");
@@ -127,7 +189,17 @@ public class Controller implements Initializable {
         } catch (IOException e) {
             LSTrigger.customAlert("Error reading file.");
         }
+
+        startOver();
+        lsobsSet.addAll(bufferSet);
+        stage.setTitle(toparse.getName() + " - " + defaultTitle);
     }
+
+    @FXML
+    private MenuItem editMNU;
+
+    @FXML
+    private MenuItem removeMNU;
 
     @FXML
     private Button newBTN;
@@ -139,6 +211,12 @@ public class Controller implements Initializable {
     private Button saveBTN;
 
     @FXML
+    private HBox editModeBOX;
+
+    @FXML
+    private HBox normalbtnsBOX;
+
+    @FXML
     private RadioButton variableRBTN;
 
     @FXML
@@ -146,15 +224,6 @@ public class Controller implements Initializable {
 
     @FXML
     private ToggleGroup levelscriptTypeGroup;
-
-    @FXML
-    private RadioButton mapRBTN;
-
-    @FXML
-    private RadioButton resetRBTN;
-
-    @FXML
-    private RadioButton loadgameRBTN;
 
     @FXML
     private ListView<LSTrigger> list;
@@ -180,51 +249,72 @@ public class Controller implements Initializable {
     @FXML
     private Button removeBTN;
 
+    @FXML
+    private MenuItem saveMENUOPT;
+
+    @FXML
+    private MenuItem saveasMENUOPT;
+
+
+    @FXML
+    void quit(ActionEvent event) {
+        Alert a = new Alert(Alert.AlertType.WARNING, "All unsaved changes will be lost.", ButtonType.OK, ButtonType.CANCEL);
+        a.setHeaderText("Are you sure you want to quit?");
+        a.setTitle("Quit?");
+        Optional<ButtonType> bt = a.showAndWait();
+
+        if (bt.isPresent() && bt.get() == ButtonType.OK) {
+            Platform.exit();
+        }
+
+    }
+
+    @FXML
+    void about(ActionEvent event) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION, defaultTitle + " by AdAstra/LD3005. [2020]", ButtonType.CLOSE);
+        a.setHeaderText(null);
+        a.setTitle("About...");
+        a.setGraphic(new ImageView(new Image(getClass().getResource("/resources/logo.png").toExternalForm())));
+        a.show();
+    }
 
 
     @FXML
     void newLS(ActionEvent event) {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to start over?");
+        confirm.setHeaderText("Discard all and Reset GUI?");
+        confirm.setTitle("Start over");
         Optional<ButtonType> bt = confirm.showAndWait();
-            if (bt.isPresent() && bt.get() == ButtonType.OK) {
-                lsobsSet.clear();
-                filePath = "";
-                variableRBTN.setSelected(true);
-                paddingCHK.setSelected(true);
 
-                idFLD.clear();
-                valueFLD.clear();
-                varFLD.clear();
-            }
+        if (bt.isPresent() && bt.get() == ButtonType.OK) {
+            startOver();
+            currentFile = null;
+            stage.setTitle("Unsaved Level Script" + " - " + defaultTitle);
+        }
     }
 
     @FXML
     void openLS(ActionEvent event) {
-        Stage s = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open File");
 
         String prefPath = prefs.get("LastPath", null);
-        if (prefPath != null)
+        if (prefPath != null) {
             fileChooser.setInitialDirectory(new File(prefPath).getParentFile());
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Level Script files (*.scr, *.bin)", "*.scr", "*.bin")
-                //new FileChooser.ExtensionFilter("Binary files (*.bin)", "*.bin")
-        );
-        File selectedFile = fileChooser.showOpenDialog(s);
+        }
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Level Script files (*.scr, *.bin)", "*.scr", "*.bin"));
+        currentFile = fileChooser.showOpenDialog(stage);
 
-        if (selectedFile == null) {
+        if (currentFile == null) {
             System.out.println("Open file cancelled");
         } else {
-            filePath = selectedFile.getAbsolutePath();
-            prefs.put("LastPath", filePath);
-            parseFile();
+            prefs.put("LastPath", currentFile.getAbsolutePath());
+            parseFile(currentFile);
         }
     }
 
     @FXML
     void saveAsLS(ActionEvent event) {
-        Stage s = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save to File");
 
@@ -235,78 +325,76 @@ public class Controller implements Initializable {
                 new FileChooser.ExtensionFilter("Level Script files (*.scr, *.bin)", "*.scr", "*.bin")
                 //new FileChooser.ExtensionFilter("Binary files (*.bin)", "*.bin")
         );
-        File selectedFile = fileChooser.showSaveDialog(s);
+        currentFile = fileChooser.showSaveDialog(stage);
 
-        if (selectedFile == null) {
+        if (currentFile == null) {
             System.out.println("Save file cancelled");
         } else {
-            filePath = selectedFile.getAbsolutePath();
-            prefs.put("LastPath", filePath);
-            saveToFile();
+            prefs.put("LastPath", currentFile.getAbsolutePath());
+            saveToFile(currentFile);
         }
     }
 
     @FXML
     void saveLS(ActionEvent event) {
-        if (filePath == null || filePath.equals("")) {
+        if (currentFile == null) {
             saveAsLS(event);
         } else {
-            saveToFile();
+            saveToFile(currentFile);
         }
     }
 
 
     @FXML
-    void add(ActionEvent event) {
-        int triggerType = getSelectedButtonID(levelscriptTypeGroup);
+    LSTrigger add(ActionEvent event) throws InvalidFieldsException, DuplicateTriggerException {
+        LSTrigger built = buildTriggerFromFields();
 
+        if (!lsobsSet.add(built)) {
+            if(!editMode.get()) {
+                throw new DuplicateTriggerException();
+            } else {
+                built = null;
+            }
+        }
+
+        clearInputFields();
+        return built;
+    }
+
+    private LSTrigger buildTriggerFromFields() throws InvalidFieldsException {
+        int triggerType = getSelectedButtonID(levelscriptTypeGroup);
         Integer scriptID = null, variableID = null, varExpectedValue = null;
-        String error = "";
+        String errorFields = "";
 
         try {
             BinaryInt.checkU16(scriptID = Integer.parseInt(idFLD.getText()));
         } catch (NumberFormatException | BinaryIntOutOfRangeException e) {
-            error += "\n- Script ID";
+            errorFields += "\n- Script ID";
         }
 
         if (triggerType == MapScreenLoadTrigger.VARIABLEVALUE) {
             try {
                 BinaryInt.checkU16(variableID = Integer.parseInt(varFLD.getText()));
             } catch (NumberFormatException | BinaryIntOutOfRangeException e) {
-                error += "\n- Variable ID";
+                errorFields += "\n- Variable ID";
             }
 
             try {
                 BinaryInt.checkU16(varExpectedValue = Integer.parseInt(valueFLD.getText()));
             } catch (NumberFormatException | BinaryIntOutOfRangeException e) {
-                error += "\n- Variable Expected Value";
+                errorFields += "\n- Variable Expected Value";
             }
         }
 
-        if (!error.equals("")) {
-            LSTrigger.customAlert("Only integers in the range 0-65535 are allowed.\nInvalid field(s):" + error);
-            return;
+        if (!errorFields.equals("")) {
+            throw new InvalidFieldsException(errorFields);
         }
 
         if (triggerType == MapScreenLoadTrigger.VARIABLEVALUE) {
-            if (!lsobsSet.add(new VariableValueTrigger(scriptID, variableID, varExpectedValue))) {
-                LSTrigger.customAlert("The trigger you're trying to add already exists.\n" +
-                        "Check the fields and try again.");
-                return;
-            }
+            return new VariableValueTrigger(scriptID, variableID, varExpectedValue);
+        } else {
+            return new MapScreenLoadTrigger(triggerType, scriptID);
         }
-        else {
-            if (!lsobsSet.add(new MapScreenLoadTrigger(triggerType, scriptID))) {
-                LSTrigger.customAlert("The trigger you're trying to add already exists.\n" +
-                        "Check the fields and try again.");
-                return;
-            }
-        }
-
-
-        idFLD.clear();
-        valueFLD.clear();
-        varFLD.clear();
     }
 
     @FXML
@@ -315,9 +403,47 @@ public class Controller implements Initializable {
         lsobsSet.remove(ls);
     }
 
+    @FXML
+    void startEditing(ActionEvent event) {
+        editMode.set(true);
+        opacity.set(0.85);
+        selected = list.getSelectionModel().getSelectedItem();
+        idFLD.requestFocus();
+
+        idFLD.setText(String.valueOf(selected.getScriptTriggered()));
+        levelscriptTypeGroup.getToggles().get(selected.getTriggerType()-1).setSelected(true);
+        if (selected.getTriggerType() == LSTrigger.VARIABLEVALUE) {
+            VariableValueTrigger varLStrig = (VariableValueTrigger) selected;
+
+            varFLD.setText(String.valueOf(varLStrig.getVariableToWatch()));
+            valueFLD.setText(String.valueOf(varLStrig.getExpectedValue()));
+        }
+    }
+
+    @FXML
+    void confirm(ActionEvent event) throws InvalidFieldsException, DuplicateTriggerException {
+        LSTrigger built = add(event);
+
+        if (built != null)
+            lsobsSet.remove(selected);
+
+        list.getSelectionModel().select(built);
+        editMode.set(false);
+        opacity.set(1.0);
+    }
+
+    @FXML
+    void discard(ActionEvent event) {
+        clearInputFields();
+        editMode.set(false);
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        editMode.set(false);
+        opacity.set(1.0);
+
+
         lsobsSet = FXCollections.observableSet();
         lsobsSet.addListener((SetChangeListener.Change<? extends LSTrigger> c) -> {
             if (c.wasAdded()) {
@@ -329,7 +455,7 @@ public class Controller implements Initializable {
         });
 
 
-        ObservableList<LSTrigger> olist = FXCollections.observableArrayList(lsobsSet);
+        olist = FXCollections.observableArrayList(lsobsSet);
         list.setItems(olist);
 
 
@@ -357,7 +483,19 @@ public class Controller implements Initializable {
 
         // Remove button disabled when:
         // - List is empty
-        removeBTN.disableProperty().bind(new SimpleListProperty<>(olist).emptyProperty());
+        SimpleListProperty<LSTrigger> slpTrigger = new SimpleListProperty<>(olist);
+        removeBTN.disableProperty().bind(slpTrigger.emptyProperty());
+        removeMNU.disableProperty().bind(slpTrigger.emptyProperty());
+        editMNU.disableProperty().bind(slpTrigger.emptyProperty());
+        saveBTN.disableProperty().bind(Bindings.or(slpTrigger.emptyProperty(), editMode));
+        saveasMENUOPT.disableProperty().bind(Bindings.or(slpTrigger.emptyProperty(), editMode));
+        saveMENUOPT.disableProperty().bind(Bindings.or(slpTrigger.emptyProperty(), editMode));
+
+        editModeBOX.visibleProperty().bind(editMode);
+        normalbtnsBOX.disableProperty().bind(editMode);
+        paddingCHK.disableProperty().bind(editMode);
+        list.mouseTransparentProperty().bind(editMode);
+        list.opacityProperty().bind(opacity);
     }
 
     private void setDefaultButtonStyle(Button btn) {

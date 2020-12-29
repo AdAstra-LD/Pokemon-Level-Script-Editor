@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -12,13 +13,19 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("gui.fxml"));
-        primaryStage.setTitle("PLSE - Pokémon Level Script Editor");
+        FXMLLoader l = new FXMLLoader(getClass().getResource("gui.fxml"));
+        Parent root = l.load();
+        Controller main = l.getController();
+
+        primaryStage.setTitle("Pokémon Level Script Editor 1.0");
         primaryStage.setMinWidth(width); primaryStage.setMinHeight(height);
         Scene s = new Scene(root, width, height);
+
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/resources/LSE.png")));
         //s.getStylesheets().add("resources/dark-theme.css");
         primaryStage.setScene(s);
         primaryStage.show();
+        main.setStage(primaryStage);
 
     }
 
