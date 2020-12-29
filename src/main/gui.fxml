@@ -66,7 +66,7 @@
             </MenuBar>
             <HBox alignment="CENTER_LEFT" prefHeight="7.0" prefWidth="552.0" VBox.vgrow="NEVER">
                <children>
-                  <Button focusTraversable="false" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#newLS" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
+                  <Button fx:id="newBTN" focusTraversable="false" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#newLS" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
                      <graphic>
                         <ImageView pickOnBounds="true" preserveRatio="true">
                            <viewport>
@@ -81,7 +81,7 @@
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
                   </Button>
-                  <Button focusTraversable="false" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#openLS" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
+                  <Button fx:id="openBTN" focusTraversable="false" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#openLS" prefHeight="40.0" prefWidth="40.0" style="-fx-background-color: transparent;">
                      <graphic>
                         <ImageView pickOnBounds="true" preserveRatio="true">
                            <viewport>
