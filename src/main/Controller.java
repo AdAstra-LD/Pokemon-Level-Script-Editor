@@ -369,20 +369,20 @@ public class Controller implements Initializable {
         try {
             BinaryInt.checkU16(scriptID = Integer.parseInt(idFLD.getText()));
         } catch (NumberFormatException | BinaryIntOutOfRangeException e) {
-            errorFields += "\n- Script ID";
+            errorFields += "\n- Script to trigger";
         }
 
         if (triggerType == MapScreenLoadTrigger.VARIABLEVALUE) {
             try {
                 BinaryInt.checkU16(variableID = Integer.parseInt(varFLD.getText()));
             } catch (NumberFormatException | BinaryIntOutOfRangeException e) {
-                errorFields += "\n- Variable ID";
+                errorFields += "\n- Variable to watch";
             }
 
             try {
                 BinaryInt.checkU16(varExpectedValue = Integer.parseInt(valueFLD.getText()));
             } catch (NumberFormatException | BinaryIntOutOfRangeException e) {
-                errorFields += "\n- Variable Expected Value";
+                errorFields += "\n- Expected Value of the variable";
             }
         }
 
