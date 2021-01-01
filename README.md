@@ -1,5 +1,6 @@
 # Pokemon Level Script Editor
 Little Java tool that loads and creates Level Script binary files
+
 [Screenshot](PLSE1_0.png)
 
 ## Info and usage
