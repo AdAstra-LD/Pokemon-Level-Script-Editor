@@ -1,4 +1,4 @@
-# Pokemon Level Scripts Editor
+# Pokemon Level Script Editor
 Little Java tool that loads and creates Level Script binary files
 
 ## Info and usage
@@ -10,5 +10,4 @@ This tool was created with JavaFX in IntelliJ Idea. To run this tool, you will n
 
 ### What this tool can **not** do
 - Insert a level script into a ROM.
-For that, you'll need to extract the scripts narc ([\a\0\1\2] for HG/SS) and manually overwrite the file you
-need to replace.
+For that, you'll need to manually edit the scripts narc ([\a\0\1\2] for HG/SS) and overwrite the file you need to replace.
