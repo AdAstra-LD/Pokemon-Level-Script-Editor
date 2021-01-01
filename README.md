@@ -1,4 +1,4 @@
-# Pokemon-Level-Scripts-Editor
+# Pokemon Level Scripts Editor
 Little Java tool that loads and creates Level Script binary files
 
 ## Info and usage
