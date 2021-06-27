@@ -41,7 +41,7 @@ public class Controller implements Initializable {
     private Stage stage;
     private String defaultTitle;
 
-    private File currentFile;
+    private File currentFile = null;
     private LSTrigger selected = null;
     private BooleanProperty editMode = new SimpleBooleanProperty();
     private DoubleProperty opacity = new SimpleDoubleProperty();
@@ -83,6 +83,7 @@ public class Controller implements Initializable {
     }
 
     public void saveToFile (File toWrite) {
+        int bytesWritten;
         try (BinaryWriter bw = new BinaryWriter(toWrite)){
 
             TreeSet<MapScreenLoadTrigger> tsMapScreenLoad = new TreeSet<>();
@@ -121,6 +122,8 @@ public class Controller implements Initializable {
                     }
                 }
             }
+
+            bytesWritten = bw.getBytesWritten();
         } catch (FileNotFoundException e) {
             LSTrigger.customAlert("The file couldn't be located.");
             return;
@@ -129,9 +132,11 @@ public class Controller implements Initializable {
             return;
         }
 
-        Alert a = new Alert(Alert.AlertType.INFORMATION, "File was correctly saved.");
-        a.setHeaderText("Success!");
-        a.show();
+        if (bytesWritten <= 4) {
+            LSTrigger.customInfo("Empty level script file was correctly saved.", "Success!");
+        } else {
+            LSTrigger.customInfo("File was correctly saved.", "Success!");
+        }
         stage.setTitle(toWrite.getName() + " - " + defaultTitle);
     }
 
@@ -157,6 +162,13 @@ public class Controller implements Initializable {
                 } else {
                     hasConditionalStructure = true;
                     conditionalStructureOffset = (int) br.readUInt32();
+                }
+            }
+
+            if (br.getBytesRead() == 1) {
+                if (br.readUInt16() == 0 && toparse.length() < LSTrigger.SMALLEST_TRIGGER_SIZE) {
+                    LSTrigger.customInfo("This level script does nothing.", "Interesting...");
+                    return;
                 }
             }
 
@@ -293,12 +305,13 @@ public class Controller implements Initializable {
     void openLS(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Level Script files (*.scr, *.bin)", "*.scr", "*.bin"));
 
         String prefPath = prefs.get("LastPath", null);
-        if (prefPath != null) {
-            fileChooser.setInitialDirectory(new File(prefPath).getParentFile());
+        File lastFile = new File(prefPath).getParentFile();
+        if (prefPath != null && lastFile.exists()) {
+            fileChooser.setInitialDirectory(lastFile);
         }
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Level Script files (*.scr, *.bin)", "*.scr", "*.bin"));
         currentFile = fileChooser.showOpenDialog(stage);
 
         if (currentFile == null) {
@@ -483,7 +496,7 @@ public class Controller implements Initializable {
         removeBTN.disableProperty().bind(slpTrigger.emptyProperty());
         removeMNU.disableProperty().bind(slpTrigger.emptyProperty());
         editMNU.disableProperty().bind(slpTrigger.emptyProperty());
-        saveBTN.disableProperty().bind(Bindings.or(slpTrigger.emptyProperty(), editMode));
+        //saveBTN.disableProperty().bind(Bindings.or(slpTrigger.emptyProperty(), editMode));
         saveasMENUOPT.disableProperty().bind(Bindings.or(slpTrigger.emptyProperty(), editMode));
         saveMENUOPT.disableProperty().bind(Bindings.or(slpTrigger.emptyProperty(), editMode));
 

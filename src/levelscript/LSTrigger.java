@@ -11,6 +11,7 @@ public abstract class LSTrigger {
     public static final int SCREENRESET = 3;
     public static final int LOADGAME = 4;
 
+
     public static final int SMALLEST_TRIGGER_SIZE = 5;
 
     private int triggerType;
@@ -24,6 +25,12 @@ public abstract class LSTrigger {
     public static void customAlert(String contentText) {
         Alert a = new Alert(Alert.AlertType.ERROR, contentText, ButtonType.OK);
         a.setHeaderText("Something went wrong");
+        a.show();
+    }
+
+    public static void customInfo(String contentText, String headerText) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION, contentText, ButtonType.OK);
+        a.setHeaderText(headerText);
         a.show();
     }
 
