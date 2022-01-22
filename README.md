@@ -4,7 +4,7 @@ Little Java tool that loads and creates Level Script binary files.
 ![Screenshot](PLSE1_0.png)
 
 ## Info and usage
-This tool was created with JavaFX in IntelliJ Idea. To run it, you will need the **latest Java 8 version** along with **JavaFX.**
+This tool was created with JavaFX in IntelliJ Idea. To run it, you will need the **latest Java 8 version** along with the **JavaFX runtime.**
 
 ### What this tool can do
 - Create a level script from scratch
