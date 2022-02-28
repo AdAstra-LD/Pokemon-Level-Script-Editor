@@ -17,7 +17,7 @@ public class Main extends Application {
         Parent root = l.load();
         Controller main = l.getController();
 
-        primaryStage.setTitle("Pokémon Level Script Editor 1.1");
+        primaryStage.setTitle("Pokémon Level Script Editor 1.2");
         primaryStage.setMinWidth(width); primaryStage.setMinHeight(height);
         Scene s = new Scene(root, width, height);
 

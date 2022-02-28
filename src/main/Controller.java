@@ -279,7 +279,7 @@ public class Controller implements Initializable {
 
     @FXML
     void about(ActionEvent event) {
-        Alert a = new Alert(Alert.AlertType.INFORMATION, defaultTitle + " by AdAstra/LD3005. [2020]", ButtonType.CLOSE);
+        Alert a = new Alert(Alert.AlertType.INFORMATION, defaultTitle + " by AdAstra/LD3005. [2022]", ButtonType.CLOSE);
         a.setHeaderText(null);
         a.setTitle("About...");
         a.setGraphic(new ImageView(new Image(getClass().getResource("/resources/logo.png").toExternalForm())));
@@ -308,9 +308,11 @@ public class Controller implements Initializable {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Level Script files (*.scr, *.bin)", "*.scr", "*.bin"));
 
         String prefPath = prefs.get("LastPath", null);
-        File lastFile = new File(prefPath).getParentFile();
-        if (prefPath != null && lastFile.exists()) {
-            fileChooser.setInitialDirectory(lastFile);
+        if (prefPath != null) {
+            File lastFile = new File(prefPath).getParentFile();
+            if (lastFile.exists()) {
+                fileChooser.setInitialDirectory(lastFile);
+            }
         }
         currentFile = fileChooser.showOpenDialog(stage);
 
