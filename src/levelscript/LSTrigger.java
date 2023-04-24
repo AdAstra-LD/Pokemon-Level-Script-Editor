@@ -1,8 +1,6 @@
 package levelscript;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-
+import javax.swing.*;
 import java.util.Objects;
 
 public abstract class LSTrigger {
@@ -23,15 +21,11 @@ public abstract class LSTrigger {
     }
 
     public static void customAlert(String contentText) {
-        Alert a = new Alert(Alert.AlertType.ERROR, contentText, ButtonType.OK);
-        a.setHeaderText("Something went wrong");
-        a.show();
+        JOptionPane.showMessageDialog(null, contentText, "Something went wrong", JOptionPane.WARNING_MESSAGE);
     }
 
     public static void customInfo(String contentText, String headerText) {
-        Alert a = new Alert(Alert.AlertType.INFORMATION, contentText, ButtonType.OK);
-        a.setHeaderText(headerText);
-        a.show();
+        JOptionPane.showMessageDialog(null, contentText, headerText, JOptionPane.WARNING_MESSAGE);
     }
 
     public int getTriggerType() {
