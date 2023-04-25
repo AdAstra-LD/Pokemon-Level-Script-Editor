@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Pokemon-Level-Scripts-Editor:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Pokemon_Level_Scripts_Editor_jar</output-path>
+    <root id="archive" name="Pokemon-Level-Scripts-Editor.jar">
+      <element id="module-output" name="Pokemon-Level-Scripts-Editor" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/formdev/flatlaf/2.3/flatlaf-2.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/miglayout/miglayout-swing/11.1/miglayout-swing-11.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/miglayout/miglayout-core/11.1/miglayout-core-11.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
