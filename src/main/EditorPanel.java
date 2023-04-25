@@ -97,6 +97,7 @@ public class EditorPanel extends JFrame {
             lightMenuItemActionPerformed(null);
         }
 
+        removeButton.setEnabled(false);
         SwingUtilities.updateComponentTreeUI(this);
     }
 
@@ -239,6 +240,7 @@ public class EditorPanel extends JFrame {
         confirmButton.setVisible(false);
         discardButton.setVisible(false);
         addButton.setEnabled(false);
+        removeButton.setEnabled(false);
         clearInputFields();
         SwingUtilities.updateComponentTreeUI(this);
     }
