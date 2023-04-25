@@ -5,7 +5,9 @@ Little Java tool that loads and creates Level Script binary files.
 
 ## Info and usage
 This tool was created with Swing/FlatLaF/JFormDesigner in IntelliJ IDEA. To run it, you will need the **latest Java 11 version.**
-You also need to add the libraries `MigLayout` and `formdev.flatlaf` to the project dependencies. This can be done with Maven, Gradle, etc...
+
+## Compiling/ Running the Source
+To compile/run in an IDE, you'll need to add the libraries `MigLayout` and `formdev.flatlaf` to the project dependencies. This can be done with Maven, Gradle, etc...
 
 ### What this tool can do
 - Create a level script from scratch
