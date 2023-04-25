@@ -1,0 +1,280 @@
+JFDML JFormDesigner: "8.0.0.0.194" Java: "11.0.10" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.autoExternalize": true
+	"i18n.bundlePackage": "resources"
+	"i18n.bundleName": "gui"
+	"i18n.keyPrefix": "EditorPanel"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+			"$layoutConstraints": "insets 5,hidemode 3"
+			"$columnConstraints": "[127,left][462,fill]"
+			"$rowConstraints": "[][][fill][grow][][]"
+		} ) {
+			name: "this"
+			"minimumSize": new java.awt.Dimension( 590, 600 )
+			"name": "Pokémon Level Script Editor v1.2 [Swing Edition]"
+			"defaultCloseOperation": 0
+			"resizable": false
+			"title": "Pokémon Level Script Editor v1.2 [Swing Edition]"
+			"iconImage": new com.jformdesigner.model.SwingIcon( 0, "/resources/LSE.png" )
+			addEvent( new FormEvent( "java.awt.event.WindowListener", "windowClosing", "thisWindowClosing", true ) )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "triggerTypeLabel"
+				"text": new FormMessage( null, "EditorPanel.triggerTypeLabel.text" )
+				"font": new java.awt.Font( ".AppleSystemUIFont", 0, 16 )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 0"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "newButton"
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/resources/new.png" )
+				"maximumSize": new java.awt.Dimension( 38, 38 )
+				"minimumSize": new java.awt.Dimension( 38, 38 )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "newButtonActionPerformed", true ) )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 0 1 2,grow"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "openButton"
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/resources/open.png" )
+				"maximumSize": new java.awt.Dimension( 38, 38 )
+				"minimumSize": new java.awt.Dimension( 38, 38 )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "openButtonActionPerformed", true ) )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 0 1 2,grow"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "saveButton"
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/resources/save.png" )
+				"maximumSize": new java.awt.Dimension( 38, 38 )
+				"minimumSize": new java.awt.Dimension( 38, 38 )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "saveButtonActionPerformed", true ) )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 0 1 2,grow"
+			} )
+			add( new FormComponent( "javax.swing.JRadioButton" ) {
+				name: "varValueButton"
+				"text": new FormMessage( null, "EditorPanel.varValueButton.text" )
+				"$buttonGroup": new FormReference( "buttonGroup1" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "varValueButtonActionPerformed", true ) )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 1"
+			} )
+			add( new FormComponent( "javax.swing.JRadioButton" ) {
+				name: "mapChangeButton"
+				"text": new FormMessage( null, "EditorPanel.mapChangeButton.text" )
+				"$buttonGroup": new FormReference( "buttonGroup1" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "mapChangeButtonActionPerformed", true ) )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 1"
+			} )
+			add( new FormComponent( "javax.swing.JRadioButton" ) {
+				name: "screenResetButton"
+				"text": new FormMessage( null, "EditorPanel.screenResetButton.text" )
+				"$buttonGroup": new FormReference( "buttonGroup1" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "screenResetButtonActionPerformed", true ) )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 1"
+			} )
+			add( new FormComponent( "javax.swing.JRadioButton" ) {
+				name: "loadGameButton"
+				"text": "Load game"
+				"$buttonGroup": new FormReference( "buttonGroup1" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "loadGameButtonActionPerformed", true ) )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 1"
+			} )
+			add( new FormComponent( "javax.swing.JSeparator" ) {
+				name: "separator1"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 2 2 1,grow"
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+				"$layoutConstraints": "hidemode 3"
+				"$columnConstraints": "[359,fill][grow,fill]"
+				"$rowConstraints": "[][][][][][][][grow][][][]"
+			} ) {
+				name: "panel1"
+				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "scrollPane1"
+					add( new FormComponent( "javax.swing.JList" ) {
+						name: "levelScriptList"
+						"selectionMode": 0
+						auxiliary() {
+							"JavaCodeGenerator.typeParameters": "LSTrigger"
+						}
+						addEvent( new FormEvent( "javax.swing.event.ListSelectionListener", "valueChanged", "levelScriptListValueChanged", true ) )
+						addEvent( new FormEvent( "java.awt.event.MouseListener", "mousePressed", "levelScriptListMousePressed", true ) )
+					} )
+				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+					"value": "cell 0 0 1 11,grow"
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "configLabel"
+					"text": new FormMessage( null, "EditorPanel.configLabel.text" )
+					"font": new java.awt.Font( ".AppleSystemUIFont", 0, 16 )
+				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+					"value": "cell 1 0"
+				} )
+				add( new FormComponent( "javax.swing.JSeparator" ) {
+					name: "separator2"
+				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+					"value": "cell 1 1"
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "scriptLabel"
+					"text": new FormMessage( null, "EditorPanel.scriptLabel.text" )
+				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+					"value": "cell 1 2"
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "scriptNoField"
+				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+					"value": "cell 1 3,aligny top,grow 100 0"
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "variableLabel"
+					"text": new FormMessage( null, "EditorPanel.variableLabel.text" )
+				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+					"value": "cell 1 4,aligny top,growy 0"
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "variableField"
+				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+					"value": "cell 1 5,aligny top,grow 100 0"
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "valueLabel"
+					"text": new FormMessage( null, "EditorPanel.valueLabel.text" )
+				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+					"value": "cell 1 6,aligny top,growy 0"
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "valueField"
+				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+					"value": "cell 1 7,aligny top,grow 100 0"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "confirmButton"
+					"text": new FormMessage( null, "EditorPanel.confirmButton.text" )
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/resources/confirm.png" )
+					"enabled": false
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "confirmButtonActionPerformed", true ) )
+				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+					"value": "cell 1 8"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "discardButton"
+					"text": new FormMessage( null, "EditorPanel.discardButton.text" )
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/resources/discard.png" )
+					"enabled": false
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "discardButtonActionPerformed", true ) )
+				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+					"value": "cell 1 8"
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "paddingCheckbox"
+					"text": new FormMessage( null, "EditorPanel.paddingCheckbox.text" )
+				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+					"value": "cell 1 9"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "addButton"
+					"text": new FormMessage( null, "EditorPanel.addButton.text" )
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/resources/add.png" )
+					"enabled": false
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "addButtonActionPerformed", true ) )
+				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+					"value": "cell 1 10"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "removeButton"
+					"text": new FormMessage( null, "EditorPanel.removeButton.text" )
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/resources/remove.png" )
+					"enabled": false
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "removeButtonActionPerformed", true ) )
+				}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+					"value": "cell 1 10"
+				} )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 3 2 3,grow"
+			} )
+			add( new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
+				name: "menuBar1"
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "fileMenu"
+					"text": "File"
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "newMenuItem"
+						"text": new FormMessage( null, "EditorPanel.newMenuItem.text" )
+						"accelerator": static javax.swing.KeyStroke getKeyStroke( 78, 4356, false )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "newMenuItemActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "openMenuItem"
+						"text": new FormMessage( null, "EditorPanel.openMenuItem.text" )
+						"accelerator": static javax.swing.KeyStroke getKeyStroke( 79, 4356, false )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "openMenuItemActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "saveMenuItem"
+						"text": new FormMessage( null, "EditorPanel.saveMenuItem.text" )
+						"accelerator": static javax.swing.KeyStroke getKeyStroke( 83, 4356, false )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "saveMenuItemActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "saveAsMenuItem"
+						"text": new FormMessage( null, "EditorPanel.saveAsMenuItem.text" )
+						"accelerator": static javax.swing.KeyStroke getKeyStroke( 83, 4421, false )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "saveAsMenuItemActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "quitMenuItem"
+						"text": new FormMessage( null, "EditorPanel.quitMenuItem.text" )
+						"accelerator": static javax.swing.KeyStroke getKeyStroke( 81, 4356, false )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "quitMenuItemActionPerformed", true ) )
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "windowMenu"
+					"text": new FormMessage( null, "EditorPanel.windowMenu.text" )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "darkMenuItem"
+						"text": new FormMessage( null, "EditorPanel.darkMenuItem.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "darkMenuItemActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "lightMenuItem"
+						"text": new FormMessage( null, "EditorPanel.lightMenuItem.text" )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "lightMenuItemActionPerformed", true ) )
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "helpMenu"
+					"text": "Help"
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "aboutMenuItem"
+						"text": new FormMessage( null, "EditorPanel.aboutMenuItem.text" )
+						"accelerator": static javax.swing.KeyStroke getKeyStroke( 66, 4356, false )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "aboutMenuItemActionPerformed", true ) )
+					} )
+				} )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "north,aligny top,grow 100 0"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 5, 0 )
+			"size": new java.awt.Dimension( 600, 500 )
+		} )
+		add( new FormNonVisual( "javax.swing.ButtonGroup" ) {
+			name: "buttonGroup1"
+			auxiliary() {
+				"JavaCodeGenerator.variableLocal": false
+			}
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 446 )
+		} )
+	}
+}

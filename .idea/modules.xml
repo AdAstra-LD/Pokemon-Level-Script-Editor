@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Pokemon-Level-Scripts-Editor.iml" filepath="$PROJECT_DIR$/Pokemon-Level-Scripts-Editor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Pokemon-Level-Script-Editor.iml" filepath="$PROJECT_DIR$/Pokemon-Level-Script-Editor.iml" />
     </modules>
   </component>
 </project>
