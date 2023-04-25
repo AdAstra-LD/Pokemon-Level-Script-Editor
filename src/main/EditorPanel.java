@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
+//import com.apple.eawt.Application;
+
 /**
  * @author Daniel Horn
  */
@@ -66,7 +68,6 @@ public class EditorPanel extends JFrame {
     };
 
     public EditorPanel() throws InvalidFieldsException, DuplicateTriggerException {
-        System.out.println(prefs.absolutePath());
         editMode = false;
         initComponents();
         defaultTitle = getTitle();
@@ -712,13 +713,14 @@ public class EditorPanel extends JFrame {
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
         setTitle("Pok\u00e9mon Level Script Editor 2.0");
+        setIconImage(new ImageIcon(getClass().getResource("/resources/LSE.png")).getImage());
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 thisWindowClosing(e);
             }
         });
-        Container contentPane = getContentPane();
+        var contentPane = getContentPane();
         contentPane.setLayout(new MigLayout(
             "hidemode 3",
             // columns
@@ -880,31 +882,31 @@ public class EditorPanel extends JFrame {
 
                 //---- newMenuItem ----
                 newMenuItem.setText(bundle.getString("EditorPanel.newMenuItem.text"));
-                newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+                newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
                 newMenuItem.addActionListener(e -> newMenuItemActionPerformed(e));
                 fileMenu.add(newMenuItem);
 
                 //---- openMenuItem ----
                 openMenuItem.setText(bundle.getString("EditorPanel.openMenuItem.text"));
-                openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+                openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
                 openMenuItem.addActionListener(e -> openMenuItemActionPerformed(e));
                 fileMenu.add(openMenuItem);
 
                 //---- saveMenuItem ----
                 saveMenuItem.setText(bundle.getString("EditorPanel.saveMenuItem.text"));
-                saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+                saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
                 saveMenuItem.addActionListener(e -> saveMenuItemActionPerformed(e));
                 fileMenu.add(saveMenuItem);
 
                 //---- saveAsMenuItem ----
                 saveAsMenuItem.setText(bundle.getString("EditorPanel.saveAsMenuItem.text"));
-                saveAsMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()|KeyEvent.SHIFT_DOWN_MASK));
+                saveAsMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()|KeyEvent.SHIFT_DOWN_MASK));
                 saveAsMenuItem.addActionListener(e -> saveAsMenuItemActionPerformed(e));
                 fileMenu.add(saveAsMenuItem);
 
                 //---- quitMenuItem ----
                 quitMenuItem.setText(bundle.getString("EditorPanel.quitMenuItem.text"));
-                quitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+                quitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
                 quitMenuItem.addActionListener(e -> quitMenuItemActionPerformed(e));
                 fileMenu.add(quitMenuItem);
             }
@@ -916,7 +918,7 @@ public class EditorPanel extends JFrame {
 
                 //---- aboutMenuItem ----
                 aboutMenuItem.setText(bundle.getString("EditorPanel.aboutMenuItem.text"));
-                aboutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+                aboutMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
                 aboutMenuItem.addActionListener(e -> aboutMenuItemActionPerformed(e));
                 helpMenu.add(aboutMenuItem);
             }

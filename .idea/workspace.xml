@@ -10,21 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7242f581-c0d6-42a6-ae3a-643459670c25" name="Default Changelist" comment="updated the tool to run on Java 11; made a new GUI using Swing/FlatLaF instead of the previous JavaFX">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/MigLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/formdev_flatlaf.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PLSE2_0.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pokemon-Level-Scripts-Editor.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/EditorPanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/EditorPanel.jfd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/resources/gui.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PLSE1_0.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/levelscript/LSTrigger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/levelscript/LSTrigger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Controller.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/EditorPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/EditorPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/EditorPanel.jfd" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/EditorPanel.jfd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/gui.fxml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +22,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DarkyenusTimeTracker">
-    <option name="totalTimeSeconds" value="22628" />
+    <option name="totalTimeSeconds" value="24335" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -64,7 +54,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
@@ -99,8 +89,17 @@
       <option name="presentableId" value="Default" />
       <updated>1609251882752</updated>
       <workItem from="1682288855828" duration="24305000" />
-      <workItem from="1682372761011" duration="679000" />
+      <workItem from="1682372761011" duration="1317000" />
+      <workItem from="1682443831105" duration="1325000" />
     </task>
+    <task id="LOCAL-00001" summary="updated the tool to run on Java 11; made a new GUI using Swing/FlatLaF instead of the previous JavaFX">
+      <created>1682373453647</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1682373453647</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
