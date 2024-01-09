@@ -167,10 +167,14 @@ public class EditorPanel extends JFrame {
                     && scriptType <= LSTrigger.LOADGAME) {
                 long scriptToTrigger;
 
-                if (hasConditionalStructure) conditionalStructureOffset--;
+                if (hasConditionalStructure) {
+                    conditionalStructureOffset--;
+                }
                 if (scriptType != LSTrigger.VARIABLEVALUE) {
                     scriptToTrigger = br.readUInt32();
-                    if (hasConditionalStructure) conditionalStructureOffset -= 4;
+                    if (hasConditionalStructure) {
+                        conditionalStructureOffset -= 4;
+                    }
                     bufferSet.add(new MapScreenLoadTrigger(scriptType, (int) scriptToTrigger));
                 } else {
                     hasConditionalStructure = true;
@@ -179,7 +183,8 @@ public class EditorPanel extends JFrame {
             }
 
             if (br.getBytesRead() == 1) {
-                if (br.readUInt16() == 0 && toparse.length() < LSTrigger.SMALLEST_TRIGGER_SIZE) {
+                int read = br.readUInt16();
+                if ( read == 0 && toparse.length() < LSTrigger.SMALLEST_TRIGGER_SIZE) {
                     LSTrigger.customInfo("This level script does nothing.", "Interesting...");
                     return;
                 }
